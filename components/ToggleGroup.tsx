@@ -13,7 +13,7 @@ interface ToggleOption {
 interface ToggleGroupProps {
     options: ToggleOption[];
     onSelect: (selectedId: number) => void;
-    children?: { index: number; component: React.ReactNode }[];
+    children?: { id: number; component: React.ReactNode }[];
 
 }
 
@@ -27,7 +27,7 @@ const ToggleGroup = ({ options, onSelect, children }: ToggleGroupProps) => {
 
     return (
         <View style={styles.container}>
-            {options.map((option, index) => (
+            {options.map((option) => (
                 <View key={option.id}>
                     <TouchableOpacity
                         style={[styles.toggleOption]}
@@ -36,8 +36,8 @@ const ToggleGroup = ({ options, onSelect, children }: ToggleGroupProps) => {
                         <ToggleItem key={option.id} title={option.title} description={option.description} checked={selectedId === option.id} />
                     </TouchableOpacity>
                     {children && children.map((child) => {
-                        if (child.index === index + 1) {
-                            return <View key={child.index}>{child.component}</View>;
+                        if (child.id === option.id) {
+                            return <View key={child.id}>{child.component}</View>;
                         }
                         return null;
                     })}

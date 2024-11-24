@@ -4,23 +4,28 @@ import ToggleGroup from '@/components/ToggleGroup';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import PaymentInstallmentsModal from '@/components/PaymentInstallmentsModal';
+import ProcessingTransferModal from '@/components/ProcessingTransferModal';
 
 export default function HomeScreen() {
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-
-  const handleToggleSelect = (id: number) => {
-    setSelectedOption(id);
-  };
-
   const toggleOptions = [
     { id: 1, title: 'Saldo em conta', description: 'Disponível: R$ 2.000' },
     { id: 2, title: 'mastercard', description: 'Final ****1234' },
     { id: 3, title: 'visa', description: 'Final ****1234' },
   ];
+
+  const [selectedOption, setSelectedOption] = useState<number>(0);
+  const [processingTransfer, setProcessingTransfer] = useState<boolean>(false);
+
+
+  const handleToggleSelect = (id: number) => {
+    setSelectedOption(id);
+  };
+
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-
+        <ProcessingTransferModal isOpen={processingTransfer} />
         <View style={styles.header}>
           <TouchableOpacity style={styles.iconContainer}>
             <Ionicons name="arrow-back" size={24} color="#004D49" />
@@ -37,13 +42,19 @@ export default function HomeScreen() {
           onSelect={handleToggleSelect}
           children={
             [{
-              index: 1,
+              id: toggleOptions[0].id,
               component: <View style={styles.headerCred}><ThemedText type="title" >Cartões de crédito</ThemedText></View>
-            }]
+            },
+            {
+              id: selectedOption,
+              component: selectedOption !== toggleOptions[0].id && <PaymentInstallmentsModal />
+
+            }
+            ]
           }
         />
 
-        <PaymentInstallmentsModal />
+
         {selectedOption && (
           <ThemedText style={styles.selectedText}>
             Você selecionou a opção {selectedOption}
@@ -52,8 +63,8 @@ export default function HomeScreen() {
 
       </ScrollView>
       <View style={styles.footer}>
-        <View>
-          <ThemedText style={styles.selectedText}>
+        <View >
+          <ThemedText >
             Valor a ser pago
           </ThemedText>
           <ThemedText type='defaultSemiBold'>
@@ -61,7 +72,7 @@ export default function HomeScreen() {
           </ThemedText>
         </View>
 
-        <TouchableOpacity style={styles.payButton}>
+        <TouchableOpacity style={styles.payButton} onPress={() => setProcessingTransfer(!processingTransfer)}>
           <ThemedText type="subtitle" style={styles.payButtonText}>
             Pagar
           </ThemedText>
@@ -112,17 +123,18 @@ const styles = StyleSheet.create({
     padding: 16,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    flexDirection: 'row'
   },
   payButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#00726D',
     paddingVertical: 12,
     paddingHorizontal: 24,
-    borderRadius: 8,
-    width: '100%',
+    borderRadius: 24,
     alignItems: 'center',
   },
+
   payButtonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
