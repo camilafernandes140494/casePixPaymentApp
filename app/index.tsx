@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import ToggleGroup from '@/components/ToggleGroup';
 import { useState } from 'react';
@@ -18,24 +18,28 @@ export default function HomeScreen() {
   ];
   return (
     <View style={styles.container}>
-      <TouchableOpacity >
-        <Ionicons name="arrow-back" size={24} color="#004D49" />
-      </TouchableOpacity>
-      <ThemedText type="title">Transferência Pix</ThemedText>
-      <ThemedText type="subtitle">Conta Midway</ThemedText>
-      <ThemedText type="subtitle">Escolha uma forma de pagamento</ThemedText>
+      <ScrollView contentContainerStyle={styles.scrollContent} >
+        <TouchableOpacity>
+          <Ionicons name="arrow-back" size={24} color="#004D49" />
+        </TouchableOpacity>
+        <ThemedText type="title">Transferência Pix</ThemedText>
+        <ThemedText type="subtitle">Conta Midway</ThemedText>
+        <ThemedText type="subtitle">Escolha uma forma de pagamento</ThemedText>
 
-      <ToggleGroup
-        options={toggleOptions}
-        onSelect={handleToggleSelect}
-        children={<ThemedText type="title" >Cartões de crédito</ThemedText>}
-        childrenPosition={1} />
+        <ToggleGroup
+          options={toggleOptions}
+          onSelect={handleToggleSelect}
+          children={<ThemedText type="title" >Cartões de crédito</ThemedText>}
+          childrenPosition={1} />
 
-      {selectedOption && (
-        <ThemedText style={styles.selectedText}>
-          Você selecionou a opção {selectedOption}
-        </ThemedText>
-      )}
+        {selectedOption && (
+          <ThemedText style={styles.selectedText}>
+            Você selecionou a opção {selectedOption}
+          </ThemedText>
+        )}
+
+      </ScrollView>
+
     </View>
   );
 }
@@ -43,6 +47,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
 
   container: {
+    flex: 1, // Isso vai garantir que a tela ocupe todo o espaço disponível
+  },
+  scrollContent: {
     display: 'flex',
     flexDirection: "column",
     justifyContent: 'center',
