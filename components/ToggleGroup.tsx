@@ -13,12 +13,12 @@ interface ToggleOption {
 interface ToggleGroupProps {
     options: ToggleOption[];
     onSelect: (selectedId: number) => void;
-    children?: React.ReactNode;
-    childrenPosition?: number;
+    children?: { index: number; component: React.ReactNode }[];
+
 }
 
-const ToggleGroup = ({ options, onSelect, children, childrenPosition }: ToggleGroupProps) => {
-    const [selectedId, setSelectedId] = useState<number | null>(null);
+const ToggleGroup = ({ options, onSelect, children }: ToggleGroupProps) => {
+    const [selectedId, setSelectedId] = useState<number>(options[0].id);
 
     const handleSelect = (id: number) => {
         setSelectedId(id);
@@ -35,9 +35,12 @@ const ToggleGroup = ({ options, onSelect, children, childrenPosition }: ToggleGr
                     >
                         <ToggleItem key={option.id} title={option.title} description={option.description} checked={selectedId === option.id} />
                     </TouchableOpacity>
-                    {children && childrenPosition === index + 1 && (
-                        children
-                    )}
+                    {children && children.map((child) => {
+                        if (child.index === index + 1) {
+                            return <View key={child.index}>{child.component}</View>;
+                        }
+                        return null;
+                    })}
                 </View>
             ))}
         </View>
@@ -80,12 +83,14 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     toggleOption: {
-        padding: 15,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        backgroundColor: '#fff',
+        paddingTop: 12,
+        paddingBottom: 12,
+        paddingLeft: 16,
+        paddingRight: 16,
+        marginBottom: 16,
+        borderRadius: 8,
+        backgroundColor: '#FFFFFF',
+        boxShadow: '0px 4px 6px rgba(59, 68, 67, 0.3)',
     },
     image: {
         width: 30,

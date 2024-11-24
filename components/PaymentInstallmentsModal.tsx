@@ -1,34 +1,52 @@
-import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { ThemedText } from './ThemedText';
+import { Ionicons } from '@expo/vector-icons';
 
 const PaymentInstallmentsModal = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Função para abrir a modal
   const openModal = () => setModalVisible(true);
 
-  // Função para fechar a modal
   const closeModal = () => setModalVisible(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Botão para abrir a modal */}
-      <TouchableOpacity onPress={openModal} style={styles.openButton}>
-        <Text style={styles.buttonText}>Abrir Modal</Text>
-      </TouchableOpacity>
+      {loading ? (
+        <ActivityIndicator size="large" color="#007BFF" />
+      ) : (
+        <TouchableOpacity onPress={openModal} style={styles.openButton}>
+          <ThemedText type='defaultSemiBold' color='#00726D'>Escolher parcelas</ThemedText>
+          <Ionicons name="chevron-forward-outline" size={24} color="#00726D" />
+        </TouchableOpacity>
+      )}
 
-      {/* Modal */}
       <Modal
         transparent={true}
         visible={modalVisible}
-        onRequestClose={closeModal} // Fechar modal ao pressionar o botão de voltar
+        onRequestClose={closeModal}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
-            <Text style={styles.modalText}>Parcelas do pagamento</Text>
-            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-              <Text style={styles.buttonText}>Fechar</Text>
-            </TouchableOpacity>
+            <View style={styles.header}>
+              <TouchableOpacity onPress={closeModal} style={styles.iconContainer}>
+                <Ionicons name="close-outline" size={24} color="#004D49" />
+              </TouchableOpacity>
+              <ThemedText type="title">Parcelas do pagamento</ThemedText>
+
+            </View>
+            <ThemedText type="title">Transferência Pix</ThemedText>
+            <ThemedText type='defaultSemiBold'>O destinatário receberá à vista e você
+              pagará parcelado.</ThemedText>
+
           </View>
         </View>
       </Modal>
@@ -42,11 +60,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  header: {
+    display: 'flex',
+    flexDirection: "column",
+    alignItems: 'flex-start',
+    gap: 24,
+    width: "100%"
+  },
+  iconContainer: {
+    backgroundColor: '#E5FFFE',
+    padding: 10,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   openButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    display: 'flex',
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
+    marginBottom: 16,
     borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+
   },
   buttonText: {
     color: '#fff',
@@ -69,12 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 20,
   },
-  closeButton: {
-    backgroundColor: '#FF5733',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
+
 });
 
 export default PaymentInstallmentsModal;
