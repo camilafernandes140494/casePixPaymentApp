@@ -79,6 +79,7 @@ const PaymentInstallmentsModal = ({ simulation, onSelect }: PaymentInstallmentsM
             <FlatList
               data={simulation?.simulation}
               keyExtractor={(item) => item.installments.toString()}
+              style={{ width: '100%' }}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.item}
@@ -89,7 +90,7 @@ const PaymentInstallmentsModal = ({ simulation, onSelect }: PaymentInstallmentsM
                 </TouchableOpacity>
               )}
             />
-          </View>
+          </Vi>
         </View>
       </Modal>
     </View>
@@ -167,17 +168,20 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingBottom: 50,
+
   },
   modal: {
-    width: '80%',
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 8,
     alignItems: 'center',
-    gap: 16
+    gap: 16,
+    marginTop: 80,
+    width: "100%"
   },
   modalText: {
     fontSize: 18,

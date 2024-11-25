@@ -82,7 +82,7 @@ export default function HomeScreen() {
         />
         <PixSuccessfullyModal
           isOpen={pixSuccessfully}
-          onClose={() => setPixSuccessfully(false)}
+          onClose={() => { setPayments(null), setPixSuccessfully(false) }}
           name={accountData?.account.owner.name || ''}
           price={payments ? `${payments?.installments} x de ${formatCurrency(payments?.installmentAmount || 0)}` : toggleOptionsData[0].description.split("Disponível ")[1]}
           date={formattedDate}
@@ -134,7 +134,7 @@ export default function HomeScreen() {
             styles.payButton,
             (selectedOption !== toggleOptionsData[0].id && !payments) && styles.payButtonDisabled
           ]} onPress={() => setProcessingTransfer(true)}
-          disabled={selectedOption !== toggleOptionsData[0].id && !payments}>
+          disabled={(selectedOption !== toggleOptionsData[0].id && !payments)}>
           <ThemedText type="subtitle" style={styles.payButtonText}>
             Pagar
           </ThemedText>

@@ -16,7 +16,7 @@ interface ToggleGroupProps {
 }
 
 const ToggleGroup = ({ options, onSelect, children }: ToggleGroupProps) => {
-    const [selectedId, setSelectedId] = useState(options[0].id);
+    const [selectedId, setSelectedId] = useState<string | number | null>(null);
 
     const handleSelect = (id: number | string) => {
         setSelectedId(id);
