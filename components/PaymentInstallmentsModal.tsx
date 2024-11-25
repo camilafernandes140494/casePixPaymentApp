@@ -90,7 +90,7 @@ const PaymentInstallmentsModal = ({ simulation, onSelect }: PaymentInstallmentsM
                 </TouchableOpacity>
               )}
             />
-          </Vi>
+          </View>
         </View>
       </Modal>
     </View>
