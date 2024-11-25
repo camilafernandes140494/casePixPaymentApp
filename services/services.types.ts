@@ -35,7 +35,7 @@ type Fees = {
   };
 };
 
-type PaymentSimulation = {
+export type PaymentSimulation = {
   amountToPay: number;
   installmentAmount: number;
   installments: number;
@@ -47,7 +47,7 @@ type Receiver = {
   id: string;
 };
 
-type Payment = {
+export type Payment = {
   transactionId: string;
   amount: number;
   currency: string;

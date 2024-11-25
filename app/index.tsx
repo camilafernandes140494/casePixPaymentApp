@@ -7,10 +7,13 @@ import PaymentInstallmentsModal from '@/components/PaymentInstallmentsModal';
 import ProcessingTransferModal from '@/components/ProcessingTransferModal';
 import PixSuccessfullyModal from '@/components/PixSuccessfullyModal';
 import { getAccountData } from '@/services/services.api';
-import { AccountData } from '@/services/services.types';
+import { AccountData, PaymentSimulation } from '@/services/services.types';
+import { formatCurrency } from '@/utils/formatCurrency';
+
 
 export default function HomeScreen() {
   const [accountData, setAccountData] = useState<AccountData | null>(null);
+  const [payments, setPayments] = useState<PaymentSimulation | null>(null);
 
   useEffect(() => {
     getAccountData()
@@ -33,13 +36,6 @@ export default function HomeScreen() {
   };
 
 
-  const formatCurrency = (amount: number, currency: string): string => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency,
-    }).format(amount);
-  };
-
   const transformDataToToggleOptions = (data: AccountData | null): ToggleOption[] => {
     if (!data) {
       return []
@@ -49,7 +45,7 @@ export default function HomeScreen() {
     options.push({
       id: data.account.accountId,
       title: "Saldo em Conta",
-      description: `Disponível ${formatCurrency(data.account.balance, data.account.currency)}`,
+      description: `Disponível ${formatCurrency(data.account.balance)}`,
     });
 
     data.account.cards.forEach((card) => {
@@ -66,7 +62,6 @@ export default function HomeScreen() {
   const [toggleOptionsData, setToggleOptionsData] = useState(transformDataToToggleOptions(accountData || null))
 
   useEffect(() => { setToggleOptionsData(transformDataToToggleOptions(accountData || null)) }, [accountData])
-  console.log(selectedOption)
 
   if (toggleOptionsData.length === 0) {
     return <View style={[
@@ -86,7 +81,9 @@ export default function HomeScreen() {
         <PixSuccessfullyModal
           isOpen={pixSuccessfully}
           onClose={() => setPixSuccessfully(false)}
-          name={accountData?.account.owner.name || ''} price='R$ 100,00' date='06/12/2024'
+          name={accountData?.account.owner.name || ''}
+          price={`${payments?.installments} x de ${formatCurrency(payments?.installmentAmount || 0)}`}
+          date='06/12/2024'
         />
         <View style={styles.header}>
           <TouchableOpacity style={styles.iconContainer}>
@@ -109,7 +106,11 @@ export default function HomeScreen() {
             },
             {
               id: selectedOption,
-              component: selectedOption !== toggleOptionsData[0].id && <PaymentInstallmentsModal />
+              component: selectedOption !== toggleOptionsData[0].id && (
+                <PaymentInstallmentsModal
+                  simulation={accountData?.payment}
+                  onSelect={(payments) => setPayments(payments)}
+                />)
 
             }
             ]
@@ -122,7 +123,7 @@ export default function HomeScreen() {
             Valor a ser pago
           </ThemedText>
           <ThemedText type='defaultSemiBold'>
-            R$ 100,00
+            {payments ? `${payments?.installments} x de ${formatCurrency(payments?.installmentAmount || 0)}` : formatCurrency(Number(toggleOptionsData[0].description))}
           </ThemedText>
         </View>
 
