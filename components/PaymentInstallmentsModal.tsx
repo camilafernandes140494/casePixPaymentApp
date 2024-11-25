@@ -39,6 +39,7 @@ const PaymentInstallmentsModal = () => {
           { justifyContent: 'center' },
         ]}>
           <ActivityIndicator size="large" color="#007BFF" />
+
         </View>
       ) : (
         <TouchableOpacity onPress={openModal} style={styles.openButton}>
@@ -55,6 +56,13 @@ const PaymentInstallmentsModal = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
+            <TransactionSummary
+              transferAmount="R$ 100,00"
+              cardFee="R$ 7,50"
+              installmentFee="-"
+              totalAmount="R$ 107,50"
+              installmentDetails="4x R$ 37,50"
+            />
             <View style={styles.header}>
               <TouchableOpacity onPress={closeModal} style={styles.iconContainer}>
                 <Ionicons name="close-outline" size={24} color="#004D49" />
@@ -76,6 +84,45 @@ const PaymentInstallmentsModal = () => {
     </View>
   );
 };
+
+
+interface TransactionSummaryProps {
+  transferAmount: string;
+  cardFee: string;
+  installmentFee: string;
+  totalAmount: string;
+  installmentDetails: string;
+}
+
+const TransactionSummary = ({ transferAmount, cardFee, installmentFee, totalAmount, installmentDetails }: TransactionSummaryProps) => {
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.row}>
+        <Text style={styles.label}>Valor a transferir</Text>
+        <Text style={styles.value}>{transferAmount}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>Taxa do cartão</Text>
+        <Text style={styles.value}>{cardFee}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>Taxa de parcelamento</Text>
+        <Text style={styles.value}>{installmentFee}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>Valor a transferir + taxas</Text>
+        <Text style={styles.value}>{totalAmount}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.label}>Parcelamento</Text>
+        <Text style={styles.value}>{installmentDetails}</Text>
+      </View>
+    </View>
+  );
+};
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -119,8 +166,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-
-
   },
   modal: {
     width: '80%',
@@ -133,6 +178,20 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 18,
     marginBottom: 20,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  label: {
+    fontSize: 16,
+    color: '#333',
+  },
+  value: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#004D49',
   },
 
 });
