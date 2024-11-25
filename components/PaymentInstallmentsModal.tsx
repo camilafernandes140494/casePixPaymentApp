@@ -19,9 +19,9 @@ const PaymentInstallmentsModal = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedOption, setSelectedOption] = useState<number | string | null>(null);
 
-  const handleToggleSelect = (id: number) => {
+  const handleToggleSelect = (id: number | string) => {
     setSelectedOption(id);
   };
 

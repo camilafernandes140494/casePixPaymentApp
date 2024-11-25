@@ -1,26 +1,24 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import VisaLogo from '@/assets/images/visa.png';
+import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { ThemedText } from './ThemedText';
 
-interface ToggleOption {
-    id: number;
+export interface ToggleOption {
+    id: number | string;
     title: string;
     description: string;
 }
 
 interface ToggleGroupProps {
     options: ToggleOption[];
-    onSelect: (selectedId: number) => void;
-    children?: { id: number; component: React.ReactNode }[];
-
+    onSelect: (selectedId: number | string) => void;
+    children?: { id: number | string; component: React.ReactNode }[];
 }
 
 const ToggleGroup = ({ options, onSelect, children }: ToggleGroupProps) => {
-    const [selectedId, setSelectedId] = useState<number>(options[0].id);
+    const [selectedId, setSelectedId] = useState(options[0].id);
 
-    const handleSelect = (id: number) => {
+    const handleSelect = (id: number | string) => {
         setSelectedId(id);
         onSelect(id);
     };
@@ -59,18 +57,18 @@ const ToggleItem = ({ title, description, checked }: ToggleItemProps) => {
             <View style={styles.containerCardAll}>
 
                 <View style={styles.containerCardBrand}>
-                    {title === 'visa' && <Image
+                    {title?.includes('Visa') && <Image
                         source={require('@/assets/images/visa.png')}
                         style={styles.image}
                         resizeMode="contain"
                     />}
-                    {title === 'mastercard' && <Image
+                    {title?.includes('Master') && <Image
                         source={require('@/assets/images/mastercard.png')}
                         style={styles.image}
                         resizeMode="contain"
                     />}
 
-                    <ThemedText type="defaultSemiBold" color='#00726D'>{`Cartão ${title}`}</ThemedText>
+                    <ThemedText type="defaultSemiBold" color='#00726D'>{title}</ThemedText>
                 </View>
                 <ThemedText type="link" color='#3B4443'>{description}</ThemedText>
             </View>

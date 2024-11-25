@@ -1,28 +1,80 @@
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import ToggleGroup from '@/components/ToggleGroup';
-import { useState } from 'react';
+import ToggleGroup, { ToggleOption } from '@/components/ToggleGroup';
+import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import PaymentInstallmentsModal from '@/components/PaymentInstallmentsModal';
 import ProcessingTransferModal from '@/components/ProcessingTransferModal';
 import PixSuccessfullyModal from '@/components/PixSuccessfullyModal';
+import { getAccountData } from '@/services/services.api';
+import { AccountData } from '@/services/services.types';
 
 export default function HomeScreen() {
-  const toggleOptions = [
-    { id: 1, title: 'Saldo em conta', description: 'Disponível: R$ 2.000' },
-    { id: 2, title: 'mastercard', description: 'Final ****1234' },
-    { id: 3, title: 'visa', description: 'Final ****1234' },
-  ];
+  const [accountData, setAccountData] = useState<AccountData | null>(null);
 
-  const [selectedOption, setSelectedOption] = useState<number>(0);
+  useEffect(() => {
+    getAccountData()
+      .then((data) => {
+        setAccountData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching account data", error);
+      });
+  }, []);
+
+
+  const [selectedOption, setSelectedOption] = useState<number | string>(0);
   const [processingTransfer, setProcessingTransfer] = useState<boolean>(false);
   const [pixSuccessfully, setPixSuccessfully] = useState<boolean>(false);
 
 
-  const handleToggleSelect = (id: number) => {
+  const handleToggleSelect = (id: number | string) => {
     setSelectedOption(id);
   };
 
+
+  const formatCurrency = (amount: number, currency: string): string => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: currency,
+    }).format(amount);
+  };
+
+  const transformDataToToggleOptions = (data: AccountData | null): ToggleOption[] => {
+    if (!data) {
+      return []
+    }
+    const options: ToggleOption[] = [];
+
+    options.push({
+      id: data.account.accountId,
+      title: "Saldo em Conta",
+      description: `Disponível ${formatCurrency(data.account.balance, data.account.currency)}`,
+    });
+
+    data.account.cards.forEach((card) => {
+      options.push({
+        id: card.cardId,
+        title: `Cartão ${card.brand}`,
+        description: `Final ${card.cardNumber}`,
+      });
+    });
+
+    return options;
+  };
+
+  const [toggleOptionsData, setToggleOptionsData] = useState(transformDataToToggleOptions(accountData || null))
+
+  useEffect(() => { setToggleOptionsData(transformDataToToggleOptions(accountData || null)) }, [accountData])
+  console.log(selectedOption)
+
+  if (toggleOptionsData.length === 0) {
+    return <View style={[
+      { flex: 1, justifyContent: 'center', alignItems: "center" },
+    ]}>
+      <ActivityIndicator size="large" color="#008d86" />
+    </View>;
+  }
 
   return (
     <View style={styles.container}>
@@ -34,7 +86,7 @@ export default function HomeScreen() {
         <PixSuccessfullyModal
           isOpen={pixSuccessfully}
           onClose={() => setPixSuccessfully(false)}
-          name='Maria da Silva Maria da Silva Maria da Silva Maria da Silva' price='R$ 100,00' date='06/12/2024'
+          name={accountData?.account.owner.name || ''} price='R$ 100,00' date='06/12/2024'
         />
         <View style={styles.header}>
           <TouchableOpacity style={styles.iconContainer}>
@@ -48,29 +100,21 @@ export default function HomeScreen() {
         <ThemedText type="defaultSemiBold">Conta Midway</ThemedText>
 
         <ToggleGroup
-          options={toggleOptions}
+          options={toggleOptionsData}
           onSelect={handleToggleSelect}
           children={
             [{
-              id: toggleOptions[0].id,
+              id: toggleOptionsData[0].id,
               component: <View style={styles.headerCred}><ThemedText type="title" >Cartões de crédito</ThemedText></View>
             },
             {
               id: selectedOption,
-              component: selectedOption !== toggleOptions[0].id && <PaymentInstallmentsModal />
+              component: selectedOption !== toggleOptionsData[0].id && <PaymentInstallmentsModal />
 
             }
             ]
           }
         />
-
-
-        {selectedOption && (
-          <ThemedText style={styles.selectedText}>
-            Você selecionou a opção {selectedOption}
-          </ThemedText>
-        )}
-
       </ScrollView>
       <View style={styles.footer}>
         <View >
