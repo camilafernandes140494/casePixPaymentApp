@@ -29,9 +29,11 @@ export default function HomeScreen() {
   const [selectedOption, setSelectedOption] = useState<number | string>(0);
   const [processingTransfer, setProcessingTransfer] = useState<boolean>(false);
   const [pixSuccessfully, setPixSuccessfully] = useState<boolean>(false);
-
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('pt-BR');
 
   const handleToggleSelect = (id: number | string) => {
+    setPayments(null);
     setSelectedOption(id);
   };
 
@@ -82,8 +84,8 @@ export default function HomeScreen() {
           isOpen={pixSuccessfully}
           onClose={() => setPixSuccessfully(false)}
           name={accountData?.account.owner.name || ''}
-          price={`${payments?.installments} x de ${formatCurrency(payments?.installmentAmount || 0)}`}
-          date='06/12/2024'
+          price={payments ? `${payments?.installments} x de ${formatCurrency(payments?.installmentAmount || 0)}` : toggleOptionsData[0].description.split("Disponível ")[1]}
+          date={formattedDate}
         />
         <View style={styles.header}>
           <TouchableOpacity style={styles.iconContainer}>
@@ -123,11 +125,16 @@ export default function HomeScreen() {
             Valor a ser pago
           </ThemedText>
           <ThemedText type='defaultSemiBold'>
-            {payments ? `${payments?.installments} x de ${formatCurrency(payments?.installmentAmount || 0)}` : formatCurrency(Number(toggleOptionsData[0].description))}
+            {payments ? `${payments?.installments} x de ${formatCurrency(payments?.installmentAmount || 0)}` : toggleOptionsData[0].description.split("Disponível ")[1]}
           </ThemedText>
         </View>
 
-        <TouchableOpacity style={styles.payButton} onPress={() => setProcessingTransfer(true)}>
+        <TouchableOpacity
+          style={[
+            styles.payButton,
+            (selectedOption !== toggleOptionsData[0].id && !payments) && styles.payButtonDisabled
+          ]} onPress={() => setProcessingTransfer(true)}
+          disabled={selectedOption !== toggleOptionsData[0].id && !payments}>
           <ThemedText type="subtitle" style={styles.payButtonText}>
             Pagar
           </ThemedText>
@@ -189,7 +196,9 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: 'center',
   },
-
+  payButtonDisabled: {
+    backgroundColor: '#909090'
+  },
   payButtonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',

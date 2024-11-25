@@ -26,16 +26,21 @@ const ToggleGroup = ({ options, onSelect, children }: ToggleGroupProps) => {
     return (
         <View style={styles.container}>
             {options.map((option) => (
-                <View key={option.id}>
+                <View key={`parent-${option.id}`}>
                     <TouchableOpacity
                         style={[styles.toggleOption]}
                         onPress={() => handleSelect(option.id)}
                     >
-                        <ToggleItem key={option.id} title={option.title} description={option.description} checked={selectedId === option.id} />
+                        <ToggleItem
+                            key={`ToggleItem-${option.id}`}
+                            title={option.title}
+                            description={option.description}
+                            checked={selectedId === option.id}
+                        />
                     </TouchableOpacity>
-                    {children && children.map((child) => {
+                    {children && children.map((child, index) => {
                         if (child.id === option.id) {
-                            return <View key={child.id}>{child.component}</View>;
+                            return <View key={`children-${index}`}>{child.component}</View>;
                         }
                         return null;
                     })}
