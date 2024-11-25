@@ -1,6 +1,7 @@
 # Projeto Mobile - React Native
 
-Este é um projeto de aplicativo móvel desenvolvido com React Native. Ele permite a execução no emulador Android ou em um dispositivo físico.
+O case simula uma atividade de desenvolvimento front-end que visa criar telas de um aplicativo mobile da jornada de pagamento PIX por meio de cartão de crédito.
+Neste cenário, o backend ainda está em desenvolvimento, mas o contrato da API já foi definido e será disponibilizado futuramente. Para viabilizar o desafio, você utilizará um JSON mock como fonte de dados.
 
 ## Pré-requisitos
 
