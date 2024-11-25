@@ -22,4 +22,6 @@ npm install
 
 ### 1. Rodar o projeto no Android
 
+```bash
 npm run android
+```
