@@ -181,7 +181,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 16,
     marginTop: 80,
-    width: "100%"
+    width: "100%",
+    maxHeight: '90%',
   },
   modalText: {
     fontSize: 18,
