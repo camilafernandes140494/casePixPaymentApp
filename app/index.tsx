@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import PaymentInstallmentsModal from '@/components/PaymentInstallmentsModal';
 import ProcessingTransferModal from '@/components/ProcessingTransferModal';
+import PixSuccessfullyModal from '@/components/PixSuccessfullyModal';
 
 export default function HomeScreen() {
   const toggleOptions = [
@@ -15,6 +16,7 @@ export default function HomeScreen() {
 
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const [processingTransfer, setProcessingTransfer] = useState<boolean>(false);
+  const [pixSuccessfully, setPixSuccessfully] = useState<boolean>(false);
 
 
   const handleToggleSelect = (id: number) => {
@@ -25,7 +27,15 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <ProcessingTransferModal isOpen={processingTransfer} onClose={() => setProcessingTransfer(false)} />
+        <ProcessingTransferModal
+          isOpen={processingTransfer}
+          onClose={() => { setProcessingTransfer(false), setPixSuccessfully(true) }}
+        />
+        <PixSuccessfullyModal
+          isOpen={pixSuccessfully}
+          onClose={() => setPixSuccessfully(false)}
+          name='Maria da Silva Maria da Silva Maria da Silva Maria da Silva' price='R$ 100,00' date='06/12/2024'
+        />
         <View style={styles.header}>
           <TouchableOpacity style={styles.iconContainer}>
             <Ionicons name="arrow-back" size={24} color="#004D49" />

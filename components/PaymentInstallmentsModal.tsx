@@ -51,6 +51,7 @@ const PaymentInstallmentsModal = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}
+        animationType="slide"
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
@@ -69,10 +70,7 @@ const PaymentInstallmentsModal = () => {
                 children={[]}
               />
             </ScrollView>
-
-
           </View>
-
         </View>
       </Modal>
     </View>
@@ -121,6 +119,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+
+
   },
   modal: {
     width: '80%',
