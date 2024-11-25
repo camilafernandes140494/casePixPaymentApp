@@ -25,7 +25,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <ProcessingTransferModal isOpen={processingTransfer} />
+        <ProcessingTransferModal isOpen={processingTransfer} onClose={() => setProcessingTransfer(false)} />
         <View style={styles.header}>
           <TouchableOpacity style={styles.iconContainer}>
             <Ionicons name="arrow-back" size={24} color="#004D49" />
@@ -72,7 +72,7 @@ export default function HomeScreen() {
           </ThemedText>
         </View>
 
-        <TouchableOpacity style={styles.payButton} onPress={() => setProcessingTransfer(!processingTransfer)}>
+        <TouchableOpacity style={styles.payButton} onPress={() => setProcessingTransfer(true)}>
           <ThemedText type="subtitle" style={styles.payButtonText}>
             Pagar
           </ThemedText>

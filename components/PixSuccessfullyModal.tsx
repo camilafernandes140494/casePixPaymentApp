@@ -24,7 +24,7 @@ const PixSuccessfullyModal = ({ isOpen }: ProcessingTransferModalProps) => {
         <Modal
             visible={isVisible}
             transparent={true}
-            animationType="fade"
+            animationType="slide"
             onRequestClose={() => setIsVisible(false)}
         >
             <View style={styles.modalContainer}>
